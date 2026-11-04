@@ -30,10 +30,11 @@ CSS='''
 /* taller chips; search bar matches */
 .chip{height:40px;padding:0 17px;font-size:14px}
 .crow .icon-btn{width:40px;height:40px}
-.crow .overlay{top:calc(50% - 20px);border-radius:20px}
-.crow .overlay.has-q{border-radius:20px}
-.crow .o-row{height:38px;padding:0 16px}
-.crow .o-row input{font-size:14px}
+.crow .overlay{top:calc(50% - 26px);border-radius:24px}
+.crow .overlay.has-q{border-radius:24px}
+.crow .o-row{height:50px;padding:0 22px;gap:12px}
+.crow .o-row svg{width:17px;height:17px}
+.crow .o-row input{font-size:15px}
 '''
 def home(h):
     write_bands()
