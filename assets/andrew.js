@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 var STIFF=240,DAMP=31;
-var JIT=[.125,.625,.375,.875],TICK=[226,229,236],TICK_HOT=[117,109,255],INK=[112,112,125],INK_HOT=[89,84,184];
+var JIT=[.125,.625,.375,.875],TICK=[226,229,236],TICK_HOT=[117,109,255],INK=[112,112,125],INK_HOT=[17,17,23];
 var mix=function(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(' ')+')'};
 var sstep=function(x){var t=Math.min(1,Math.max(0,x));return t*t*(3-2*t)};
 var reduce=matchMedia('(prefers-reduced-motion: reduce)');
@@ -27,19 +27,15 @@ function toc(list,canvas){
     var v=t.reduce(function(acc,top,i){var span=Math.max(1,Math.min(.45*view,i?(top-t[i-1])*.6:Infinity));return acc+sstep((line-(top-y-span))/span)},-1);
     if(v<=0)return v;var f=Math.floor(v),r=v-f;return f+r*r*r*(r*(6*r-15)+10);
   }
+  var art=document.querySelector('[class*="__articleMain"]')||document.querySelector('main article');
   function draw(p,speed){
-    var dpr=devicePixelRatio||1,a=m.anchors,H=m.height,n=a.length;
+    var dpr=devicePixelRatio||1,H=m.height;
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,28,H);
-    var i=Math.min(n-1,Math.max(0,Math.floor(p))),f=Math.min(1,Math.max(0,p-i));
-    var c=a[i]+((a[Math.min(n-1,i+1)]!=null?a[Math.min(n-1,i+1)]:a[i])-a[i])*f;
-    var sig=7+6*Math.min(1,speed/6),mid=p>0&&p<n-1?Math.pow(Math.sin(Math.PI*f),2):0;
-    var amp=sstep(p+1)*Math.sqrt(7/sig)*(1-.5*mid);
-    for(var k=0,y=0;y+1<=H;k++,y+=6){
-      var d=y+.5-c,g=amp*Math.exp(-(d*d)/(2*sig*sig)),len=Math.floor(4+6*g+JIT[k%4]);
-      ctx.fillStyle=mix(TICK,TICK_HOT,Math.min(1,1.1*g));ctx.fillRect(0,y,2*len,1);
-      if(g>.35)ctx.fillRect((len+1)*2,y,2,1);
-      if(g>.7&&k%2===0)ctx.fillRect((len+3)*2,y,2,1);
-    }
+    // reading progress through the article: a thin track that fills with ink
+    var r=art.getBoundingClientRect(),span=Math.max(1,r.height-innerHeight*.6);
+    var prog=Math.min(1,Math.max(0,(innerHeight*.3-r.top)/span));
+    ctx.fillStyle='rgb(226 229 236)';ctx.fillRect(0,0,2,H);
+    ctx.fillStyle='rgb(1 1 16)';ctx.fillRect(0,0,2,Math.round(H*prog));
     var cur=Math.round(p);
     links.forEach(function(el,j){
       var col=mix(INK,INK_HOT,Math.max(0,1-Math.abs(p-j)));
@@ -62,6 +58,7 @@ function toc(list,canvas){
     if(Math.abs(pos-goal)>5e-4||Math.abs(vel)>5e-4)raf=requestAnimationFrame(frame);else last=0;
   }
   function kick(){if(!raf)raf=requestAnimationFrame(frame)}
+  addEventListener('scroll',function(){if(m&&pos!==null)requestAnimationFrame(function(){draw(pos,0)})},{passive:true});
   function reset(){m=null;kick()}
   kick();
   var ro=new ResizeObserver(reset);ro.observe(list);ro.observe(document.body);
