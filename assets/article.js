@@ -49,7 +49,7 @@ function glance(main,x){
 function pulls(x){
   (x.pulls||[]).forEach(function(p){
     var h=document.getElementById(p[0]);if(!h)return;
-    var q=document.createElement('blockquote');q.className='ax-pull';q.innerHTML='<p>'+esc(p[1])+'</p>';
+    var q=document.createElement('figure');q.className='ax-pull';q.innerHTML='<blockquote><p>'+esc(p[1])+'</p></blockquote>';
     h.parentNode.insertBefore(q,h);
   });
 }

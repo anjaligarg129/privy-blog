@@ -18,10 +18,19 @@
 .ax-chips li b{font-weight:500;color:var(--ax-ink)}
 @media(max-width:640px){.ax-stats{grid-template-columns:1fr;gap:20px}.ax-stats span{margin-top:6px}}
 
-/* callouts: big pull quotes with a periwinkle rule; existing blockquotes in posts get the same look */
-.ax-pull,[data-prose] blockquote{margin:48px 0;padding:4px 0 4px 36px;border-left:2px solid var(--ax-peri);font:400 clamp(26px,2.6vw,34px)/1.22 var(--ax-display);letter-spacing:-.03em;color:var(--ax-ink)}
-.ax-pull p,[data-prose] blockquote p{margin:0;font:inherit;color:inherit}
-@media(max-width:640px){.ax-pull,[data-prose] blockquote{padding-left:20px}}
+/* callouts: one system for every quote callout, and only for condensed quotes (one sentence, ~25 words max).
+   Pull quotes from the article have no marks or credit; quotes from a person (.ax-said) get curly quotes and a credit line. */
+.ax-pull{margin:48px 0;padding:2px 0 2px 28px;border-left:2px solid var(--ax-peri)}
+.ax-pull blockquote{margin:0;padding:0;border:0}
+.ax-pull p{margin:0;max-width:30em;font:400 clamp(24px,2.3vw,30px)/1.25 var(--ax-display);letter-spacing:-.025em;color:var(--ax-ink)}
+.ax-said p::before{content:"\201C"}
+.ax-said p::after{content:"\201D"}
+.ax-pull figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px;font:400 14px/1.4 var(--ax-sans);color:var(--ax-muted)}
+.ax-pull figcaption b{font-weight:500;color:var(--ax-ink)}
+.ax-pull figcaption span::before{content:"";display:inline-block;width:3px;height:3px;margin:0 8px 3px 0;border-radius:50%;background:var(--ax-muted);vertical-align:middle}
+@media(max-width:640px){.ax-pull{padding-left:20px}}
+/* any other blockquote is not a callout: it reads as body text with a quiet rule */
+[data-prose] blockquote:not(.ax-pull blockquote){margin:32px 0;padding:0 0 0 24px;border-left:2px solid var(--ax-line);font:inherit;color:inherit}
 
 /* closing: CTA band (same as the landing page's) then "Keep reading" with the gallery cards */
 .ax-end{margin-top:96px}
