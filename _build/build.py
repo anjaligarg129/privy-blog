@@ -96,7 +96,7 @@ js2=js2.replace("p.url.endsWith(","p.url.replace(/\\.html$/,'').endsWith(")
 home=S[:S.index('<script>')+8]+js2+S[S.index('</script>'):]
 home=home.replace('Student concept by Sahith &amp; Julian.','Student concept: home page by Sahith &amp; Julian, article pages by Andrew.')
 import sys;sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
-import search_patch,redesign_patch;import round5_patch;home=round5_patch.home(round4_patch.home(redesign_patch.home(search_patch.apply(home)),out,posts))
+import search_patch,redesign_patch;import round5_patch,round6_patch;home=round6_patch.home(round5_patch.home(round4_patch.home(redesign_patch.home(search_patch.apply(home)),out,posts)))
 w('index.html',home)
 
 # ---- post pages
