@@ -65,11 +65,7 @@ function keepReading(article){
   var card=function(p){return '<a class="ax-card" href="'+esc(p.url)+'"><div class="ax-art"><img src="'+esc(p.img)+'" alt="" loading="lazy" decoding="async"></div>'
     +'<div class="ax-panel"><h3>'+esc(p.title)+'</h3><p>'+esc(p.text)+'</p><span class="ax-meta"><b>'+esc(CAT[p.cat])+'</b><i></i><span>'+esc(p.date)+'</span></span></div></a>'};
   var end=document.createElement('div');end.className='ax-end';
-  end.innerHTML='<section class="ax-cta" aria-labelledby="ax-cta-h"><div class="ax-in"><div>'
-    +'<h2 id="ax-cta-h"><em>Building something like this?</em><br>Talk to our team</h2>'
-    +'<p>If your product spans traditional and onchain rails, we can walk through wallets, stablecoin issuance, and payouts on the Stripe stablecoin stack.</p>'
-    +'<div class="ax-acts"><a class="ax-btn dark" href="https://www.privy.io/contact">Talk to sales</a><a class="ax-btn line" href="https://dashboard.privy.io/">Start building</a></div></div>'
-    +'<div class="ax-stack" aria-hidden="true"><img src="../assets/img/Y1FmUxwPgSmgutb2e6Adpa6p8WQ.png" alt="" loading="lazy"></div></div></section>'
+  end.innerHTML=''
     +'<section class="ax-more" aria-labelledby="ax-more-h"><div class="ax-in"><div class="ax-head"><h2 id="ax-more-h"><em>Keep</em> reading</h2>'
     +'<a class="ax-all" href="../index.html#wall">View all posts <span aria-hidden="true">→</span></a></div>'
     +'<div class="ax-grid">'+pick.slice(0,3).map(card).join('')+'</div></div></section>';
@@ -81,7 +77,8 @@ function keepReading(article){
 function init(){
   var article=document.querySelector('main article');if(!article)return;
   var x=EXTRAS[slug],main=article.querySelector('[class*="__articleMain"]');
-  if(x&&main){glance(main,x);pulls(x);}
+  // At-a-glance stats and added pull quotes are kept in EXTRAS but switched off on this version
+  void x;void main;
   keepReading(article);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
