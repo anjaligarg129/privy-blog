@@ -15,7 +15,7 @@ function toc(list,canvas){
   var box=list.closest('nav')&&list.closest('nav').parentElement;
   var m=null,pos=null,vel=0,raf=0,last=0;
   function measure(){
-    var h=list.parentElement.offsetHeight,dpr=devicePixelRatio||1;
+    var h=list.offsetHeight,dpr=devicePixelRatio||1;
     canvas.width=28*dpr;canvas.height=Math.round(h*dpr);canvas.style.height=h+'px';
     m={tops:heads.map(function(e){return e?e.getBoundingClientRect().top+scrollY:Infinity}),
        anchors:links.map(function(a){return 6*Math.round((a.offsetTop+17-.5)/6)+.5}),
