@@ -289,7 +289,7 @@ body.searching .dim{opacity:1;visibility:visible}
 .spby span{color:var(--muted)}
 
 /* spotlight: index + stage (Figma "Spotlight — idea: index + stage"). Every story is listed in big type;
-   hovering or focusing one crossfades the stage to its artwork. No autoplay. */
+   clicking one crossfades the stage to its artwork. No autoplay. */
 .sx-grid{width:var(--content);margin:0 auto;display:grid;grid-template-columns:minmax(0,.79fr) minmax(0,1fr);gap:32px;align-items:stretch}
 .sx-index{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line)}
 .sx-item{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:16px;padding:24px 0;border-top:1px solid var(--line);color:rgba(1,1,16,.38);transition:color .25s}
@@ -735,7 +735,7 @@ $('#newsForm').addEventListener('submit',e=>{e.preventDefault();$('#newsOut').te
 (function(){
   const items=[...document.querySelectorAll('#sxIndex .sx-item')],imgs=[...document.querySelectorAll('#sxVis img')];
   const vis=$('#sxVis'),go=$('#sxGo'),foot=document.querySelector('.sx-foot'),av=$('#sxAv'),nm=$('#sxName'),dt=$('#sxDate');
-  let cur=0,touch=false,ft;
+  let cur=0,ft;
   function set(k){
     if(k===cur)return;cur=k;
     items.forEach((a,j)=>{const on=j===k;a.classList.toggle('on',on);on?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current');});
@@ -746,11 +746,8 @@ $('#newsForm').addEventListener('submit',e=>{e.preventDefault();$('#newsOut').te
     ft=setTimeout(()=>{av.src=d.av;nm.textContent=d.name;dt.textContent=d.date;foot.classList.remove('swap');},reduced?0:120);
   }
   items.forEach((a,j)=>{
-    a.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')set(j);});
-    a.addEventListener('focus',()=>set(j));
-    a.addEventListener('pointerdown',e=>{touch=e.pointerType!=='mouse';});
-    // on touch there's no hover, so the first tap opens the story and the second follows the link
-    a.addEventListener('click',e=>{if(touch&&j!==cur){e.preventDefault();set(j);}});
+    // clicking (or Enter on) another story swaps the stage; clicking the open story follows its link
+    a.addEventListener('click',e=>{if(j!==cur){e.preventDefault();set(j);}});
     a.addEventListener('keydown',e=>{
       if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;e.preventDefault();
       items[(j+(e.key==='ArrowDown'?1:-1)+items.length)%items.length].focus();
