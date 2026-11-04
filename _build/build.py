@@ -134,3 +134,16 @@ for p in posts:
     page=redesign_patch.swap_footer(page,'../','../index.html')
     w(f"posts/{p['slug']}.html",page)
 print('home posts',len(out),'local',sum(r[6] for r in out),'pages',len(posts))
+
+# ---- cache-busting: version every local CSS/JS reference by content hash
+import hashlib,glob
+def _ver(rel):
+    return hashlib.md5(open(f'{ROOT}/assets/{rel}','rb').read()).hexdigest()[:8]
+_files=['andrew.css','chrome.css','footer.css','nav.js','andrew.js']
+_v={f:_ver(f) for f in _files}
+for _p in [f'{ROOT}/index.html']+glob.glob(f'{ROOT}/posts/*.html'):
+    _h=open(_p).read()
+    for f in _files:
+        _h=re.sub(r'(assets/'+re.escape(f)+r')(\?v=[0-9a-f]+)?"',r'\1?v='+_v[f]+'"',_h)
+    open(_p,'w').write(_h)
+print('versioned',_v)
