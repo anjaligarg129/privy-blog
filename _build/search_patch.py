@@ -46,7 +46,7 @@ JS=r'''
     sel=Math.min(sel,Math.max(hits.length-1,0));
     const re=q?new RegExp(hesc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'):null;
     const hl=t=>re?hesc(t).replace(re,m=>`<mark>${m}</mark>`):hesc(t);
-    res.innerHTML=hits.length?hits.map((p,k)=>`<div class="result${k===sel?' sel':''}" role="option" data-k="${k}"><span>${hl(p.title)}</span><small>${hesc(CAT[p.cat])}</small></div>`).join(''):(q?`<div class="empty">No posts match “${hesc(q)}”.</div>`:'');
+    res.innerHTML=hits.length?`<div class="rgrid">`+hits.map((p,k)=>`<div class="result rcard${k===sel?' sel':''}" role="option" aria-selected="${k===sel}" data-k="${k}"><div class="rthumb"><img src="${p.img}" alt="" loading="lazy"></div><div class="rbody"><span class="rcat">${hesc(CAT[p.cat])}</span><span class="rtitle">${hl(p.title)}</span><span class="rdate">${p.date}</span></div></div>`).join('')+`</div>`:(q?`<div class="empty">No posts match “${hesc(q)}”.</div>`:'');
     const s=res.querySelector('.sel');if(s)s.scrollIntoView({block:'nearest'});
   }
   function open(){
@@ -65,7 +65,7 @@ JS=r'''
     if(!o&&!sheet.open&&((e.key==='/'&&!typing)||(e.key==='k'&&(e.metaKey||e.ctrlKey)))){e.preventDefault();open();return;}
     if(!o)return;
     if(e.key==='Escape'){close();btn.focus();}
-    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();sel=(sel+(e.key==='ArrowDown'?1:-1)+hits.length)%(hits.length||1);render();}
+    if(/^Arrow(Down|Up|Left|Right)$/.test(e.key)&&hits.length){const cols=Math.max(1,Math.round(res.clientWidth/(res.querySelector('.rcard')?.offsetWidth||res.clientWidth)));const d={ArrowDown:cols,ArrowUp:-cols,ArrowRight:1,ArrowLeft:-1}[e.key];if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&sq.value&&document.activeElement===sq&&cols===1)return;e.preventDefault();sel=Math.min(hits.length-1,Math.max(0,sel+d));render();}
     if(e.key==='Enter'&&hits[sel]){e.preventDefault();go(hits[sel]);}
   });
 })();
