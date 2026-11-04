@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 var STIFF=240,DAMP=31;
-var JIT=[.125,.625,.375,.875],TICK=[226,229,236],TICK_HOT=[96,96,108],INK=[112,112,125],INK_HOT=[17,17,23];
+var JIT=[.125,.625,.375,.875],TICK=[226,229,236],TICK_HOT=[117,109,255],INK=[112,112,125],INK_HOT=[89,84,184];
 var mix=function(a,b,t){return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*t)}).join(' ')+')'};
 var sstep=function(x){var t=Math.min(1,Math.max(0,x));return t*t*(3-2*t)};
 var reduce=matchMedia('(prefers-reduced-motion: reduce)');
