@@ -282,35 +282,45 @@ body.searching .dim{opacity:1;visibility:visible}
 .wrow .icon-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid #e3e3e3;background:#fafafa;display:grid;place-items:center;cursor:pointer;color:#555;transition:background .2s,color .2s}
 .wrow .icon-btn:hover{background:#f0f0f0;color:#111}
 
-/* spotlight carousel: full-bleed image cards + numbered timer */
-.spot{padding:clamp(56px,7vw,96px) 0 clamp(40px,5vw,64px);overflow:hidden}
 .spot .head{width:var(--content);margin:0 auto clamp(24px,3vw,36px)}
-.sptrack{display:flex;gap:24px;padding-left:calc((100% - var(--content))/2);transition:transform .9s var(--ease);will-change:transform}
-.spcard{position:relative;flex:none;width:var(--content);display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(16px,2vw,28px);padding:12px;border-radius:16px;background:#f4f4f7;color:var(--ink);opacity:.35;transition:opacity .7s ease}
-.spcard.on{opacity:1}
-.spcard:not(.on){cursor:pointer}
-.sptext{order:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(20px,3.4vw,52px)}
-.sptext .eyebrow{color:var(--muted)}
-.sptext h3{font-size:clamp(26px,2.6vw,38px);line-height:1.12;letter-spacing:-.03em;margin:16px 0 26px;transition:color .2s}
-.spcard.on:hover h3{color:var(--deep)}
 .spby{display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.35}
 .spby img{width:40px;height:40px;border-radius:50%;object-fit:cover;background:var(--wash)}
 .spby b{display:block;font-weight:500}
 .spby span{color:var(--muted)}
-.spimg{order:1;position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1.6;background:var(--wash)}
-.spimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.spcard.on:hover .spimg img{transform:scale(1.03)}
-@media(max-width:820px){.spcard{grid-template-columns:1fr}.spimg{order:-1}.sptext{padding:20px 12px 16px}}
-.spfoot{width:var(--content);margin:22px auto 0;display:flex;align-items:center;gap:24px}
-.spbars{flex:1;display:flex;gap:16px}
-.spbar{flex:1;height:22px;display:flex;align-items:center;cursor:pointer}
-.spbar i{position:relative;display:block;width:100%;height:2px;background:rgba(1,1,16,.12);overflow:hidden;border-radius:2px}
-.spbar i::after{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left}
-.spbar.done i::after{transform:none}
-.spbar.on i::after{animation:spfill var(--spdur,7s) linear forwards}
-.spot:hover .spbar.on i::after,.spot:focus-within .spbar.on i::after,.spot.paused .spbar.on i::after{animation-play-state:paused}
-@keyframes spfill{to{transform:none}}
-@media(max-width:820px){.spbars{gap:8px}}
+
+/* spotlight: index + stage (Figma "Spotlight — idea: index + stage"). Every story is listed in big type;
+   hovering or focusing one crossfades the stage to its artwork. No autoplay. */
+.sx-grid{width:var(--content);margin:0 auto;display:grid;grid-template-columns:minmax(0,.79fr) minmax(0,1fr);gap:32px;align-items:stretch}
+.sx-index{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line)}
+.sx-item{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:16px;padding:24px 0;border-top:1px solid var(--line);color:rgba(1,1,16,.38);transition:color .25s}
+.sx-item::before{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.sx-item.on{color:var(--ink)}
+.sx-item.on::before{transform:none}
+.sx-item:hover{color:var(--ink)}
+.sx-item:focus-visible{outline:2px solid var(--peri);outline-offset:4px;border-radius:2px}
+.sx-n{font-size:12px;font-weight:500;letter-spacing:.07em;line-height:32px;font-variant-numeric:tabular-nums}
+.sx-title{display:block;font:400 clamp(20px,1.9vw,24px)/1.33 var(--display);letter-spacing:-.03em}
+.sx-more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.sx-more-in{min-height:0;overflow:hidden}
+.sx-item.on .sx-more{grid-template-rows:1fr}
+.sx-meta{display:block;padding-top:8px;font-size:14px;line-height:20px;color:var(--muted)}
+.sx-thumb{display:none}
+.sx-arrow{font:400 24px/32px var(--display);opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .4s var(--ease)}
+.sx-item.on .sx-arrow{opacity:1;transform:none}
+.sx-stage{display:flex;flex-direction:column;gap:24px;min-width:0}
+.sx-vis{position:relative;flex:1;min-height:360px;border-radius:16px;overflow:hidden;background:var(--wash)}
+.sx-vis img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .2s ease-out,transform 1.2s var(--ease)}
+.sx-vis img.on{opacity:1}
+.sx-vis:hover img.on{transform:scale(1.03)}
+.sx-foot{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.sx-foot .spby{transition:opacity .2s}
+.sx-foot.swap .spby{opacity:0}
+@media(max-width:820px){
+  .sx-grid{grid-template-columns:1fr}
+  .sx-stage{display:none}
+  .sx-thumb{display:block;margin-top:16px;border-radius:10px;overflow:hidden;aspect-ratio:1.6;background:var(--wash)}
+  .sx-thumb img{width:100%;height:100%;object-fit:cover}
+}
 
 /* changelog: full timeline, scrolls sideways, jump by month */
 .clog .head{margin-bottom:20px}
@@ -437,7 +447,7 @@ body.searching .dim{background:rgba(1,1,16,.16)}
   <div class="more" id="more"><button class="btn line" id="moreBtn" type="button">Load more</button></div>
 </section>
 
-<section class="spot" id="spotlight" aria-roledescription="carousel" aria-label="Spotlight"><div class="head reveal"><h2><em>In the</em> spotlight</h2></div><div class="sptrack" id="spTrack"><a class="spcard on" href="posts/privy-treasury-management-for-onchain-capital.html" role="group" aria-roledescription="slide" aria-label="1 of 5" data-i="0" data-title="Introducing Privy Treasury Management"><div class="spimg"><img src="assets/img/Q311Lsne14IBqfTnz5Iya5w3sk.png" alt="" loading="lazy"></div><div class="sptext"><div class="eyebrow">Product and Engineering · 2 min read</div><h3>Introducing Privy Treasury Management</h3><div class="spby"><img src="https://images.ctfassets.net/6nllg31cugff/3WSRd4AhBug8WnXm9jKlvm/958db66732abe1ca115376e9e558c8e3/E0181S17H6Z-U09578L46LQ-6ec88bfcc19a-512.png?w=48&amp;q=75&amp;fm=webp" alt="" loading="lazy"><div><b>Sejal Jhawer</b><span>Sep 17, 2026</span></div></div></div></a><a class="spcard" href="posts/inside-the-stack-how-deel-is-turning-payroll-into-a-financial-account.html" role="group" aria-roledescription="slide" aria-label="2 of 5" data-i="1" data-title="Inside the stack: How Deel is turning payroll into a financial account" tabindex="-1" aria-hidden="true"><div class="spimg"><img src="assets/img/lJ5nbj4uhTvmtV4ItSkpPL0bPY.png" alt="" loading="lazy"></div><div class="sptext"><div class="eyebrow">Inside the stack · 4 min read</div><h3>Inside the stack: How Deel is turning payroll into a financial account</h3><div class="spby"><img src="https://images.ctfassets.net/6nllg31cugff/77kd3EZK7Jc9woDBWGYDVs/3cc0af5771770286098db7b3f6366265/headshotsquare-debbiesoon.jpg?w=48&amp;q=75&amp;fm=webp" alt="" loading="lazy"><div><b>Debbie Soon</b><span>Sep 15, 2026</span></div></div></div></a><a class="spcard" href="posts/launch-a-global-stablecoin-card-program.html" role="group" aria-roledescription="slide" aria-label="3 of 5" data-i="2" data-title="Launch a global stablecoin card program in as little as a month" tabindex="-1" aria-hidden="true"><div class="spimg"><img src="assets/img/qOQ7yR2rp7rMTteP0Ln85yoEu0.png" alt="" loading="lazy"></div><div class="sptext"><div class="eyebrow">Product and Engineering · 4 min read</div><h3>Launch a global stablecoin card program in as little as a month</h3><div class="spby"><img src="https://images.ctfassets.net/6nllg31cugff/3NgmKmBvq4TzHadwOgjo7B/c21b8f824937ff621c6c6b9f53ffeea1/E0181S17H6Z-U09HEK31KFV-8f2ebe3b68d4-512.png?w=48&amp;q=75&amp;fm=webp" alt="" loading="lazy"><div><b>Meghna Mehta</b><span>Sep 9, 2026</span></div></div></div></a><a class="spcard" href="posts/introducing-organization-wallets.html" role="group" aria-roledescription="slide" aria-label="4 of 5" data-i="3" data-title="Introducing Organization Wallets" tabindex="-1" aria-hidden="true"><div class="spimg"><img src="assets/img/aoQQJv9T1oK9j4e439d2H0bP8.png" alt="" loading="lazy"></div><div class="sptext"><div class="eyebrow">Product and Engineering · 2 min read</div><h3>Introducing Organization Wallets</h3><div class="spby"><img src="https://images.ctfassets.net/6nllg31cugff/5OliW4h4JXFFQ08gUWD4Tr/c037d248337547285381e58e2411a057/Henri.jpeg?w=48&amp;q=75&amp;fm=webp" alt="" loading="lazy"><div><b>Henri Stern</b><span>Aug 6, 2026</span></div></div></div></a><a class="spcard" href="posts/stablecoin-orchestration-guide.html" role="group" aria-roledescription="slide" aria-label="5 of 5" data-i="4" data-title="Stablecoin orchestration: what actually happens when money moves onchain and off" tabindex="-1" aria-hidden="true"><div class="spimg"><img src="assets/img/09WA5QS3rowFUEaQWvXtaoHIfQ.png" alt="" loading="lazy"></div><div class="sptext"><div class="eyebrow">Market · 7 min read</div><h3>Stablecoin orchestration: what actually happens when money moves onchain and off</h3><div class="spby"><img src="https://images.ctfassets.net/6nllg31cugff/2MHeoblnLY83eorwImAR81/1a0363b54a7145435b24cfbedaf17edc/vinny-mullin-headshot.jpg?w=48&amp;q=75&amp;fm=webp" alt="" loading="lazy"><div><b>Vinny Mullin</b><span>Aug 27, 2026</span></div></div></div></a></div><div class="spfoot"><div class="spbars" role="tablist" aria-label="Spotlight slides"><button class="spbar on" type="button" role="tab" aria-label="Go to slide 1" aria-selected="true" data-i="0"><i></i></button><button class="spbar" type="button" role="tab" aria-label="Go to slide 2" aria-selected="false" data-i="1"><i></i></button><button class="spbar" type="button" role="tab" aria-label="Go to slide 3" aria-selected="false" data-i="2"><i></i></button><button class="spbar" type="button" role="tab" aria-label="Go to slide 4" aria-selected="false" data-i="3"><i></i></button><button class="spbar" type="button" role="tab" aria-label="Go to slide 5" aria-selected="false" data-i="4"><i></i></button></div></div></section>
+<section class="spot sx" id="spotlight" aria-label="Spotlight"><div class="head reveal"><h2><em>In the</em> spotlight</h2></div><div class="sx-grid"><ol class="sx-index" id="sxIndex"><li><a class="sx-item on" href="posts/privy-treasury-management-for-onchain-capital.html" data-i="0" aria-current="true"><span class="sx-n">01</span><span class="sx-t"><span class="sx-title">Introducing Privy Treasury Management</span><span class="sx-more"><span class="sx-more-in"><span class="sx-meta">Product and Engineering · 2 min read</span><span class="sx-thumb"><img src="assets/img/Q311Lsne14IBqfTnz5Iya5w3sk.png" alt="" loading="lazy"></span></span></span></span><span class="sx-arrow" aria-hidden="true">→</span></a></li><li><a class="sx-item" href="posts/inside-the-stack-how-deel-is-turning-payroll-into-a-financial-account.html" data-i="1"><span class="sx-n">02</span><span class="sx-t"><span class="sx-title">Inside the stack: How Deel is turning payroll into a financial account</span><span class="sx-more"><span class="sx-more-in"><span class="sx-meta">Inside the stack · 4 min read</span><span class="sx-thumb"><img src="assets/img/lJ5nbj4uhTvmtV4ItSkpPL0bPY.png" alt="" loading="lazy"></span></span></span></span><span class="sx-arrow" aria-hidden="true">→</span></a></li><li><a class="sx-item" href="posts/launch-a-global-stablecoin-card-program.html" data-i="2"><span class="sx-n">03</span><span class="sx-t"><span class="sx-title">Launch a global stablecoin card program in as little as a month</span><span class="sx-more"><span class="sx-more-in"><span class="sx-meta">Product and Engineering · 4 min read</span><span class="sx-thumb"><img src="assets/img/qOQ7yR2rp7rMTteP0Ln85yoEu0.png" alt="" loading="lazy"></span></span></span></span><span class="sx-arrow" aria-hidden="true">→</span></a></li><li><a class="sx-item" href="posts/introducing-organization-wallets.html" data-i="3"><span class="sx-n">04</span><span class="sx-t"><span class="sx-title">Introducing Organization Wallets</span><span class="sx-more"><span class="sx-more-in"><span class="sx-meta">Product and Engineering · 2 min read</span><span class="sx-thumb"><img src="assets/img/aoQQJv9T1oK9j4e439d2H0bP8.png" alt="" loading="lazy"></span></span></span></span><span class="sx-arrow" aria-hidden="true">→</span></a></li><li><a class="sx-item" href="posts/stablecoin-orchestration-guide.html" data-i="4"><span class="sx-n">05</span><span class="sx-t"><span class="sx-title">Stablecoin orchestration: what actually happens when money moves onchain and off</span><span class="sx-more"><span class="sx-more-in"><span class="sx-meta">Market · 7 min read</span><span class="sx-thumb"><img src="assets/img/09WA5QS3rowFUEaQWvXtaoHIfQ.png" alt="" loading="lazy"></span></span></span></span><span class="sx-arrow" aria-hidden="true">→</span></a></li></ol><div class="sx-stage" id="sxStage"><a class="sx-vis" id="sxVis" href="posts/privy-treasury-management-for-onchain-capital.html" tabindex="-1" aria-hidden="true"><img class="on" src="assets/img/Q311Lsne14IBqfTnz5Iya5w3sk.png" alt="" loading="lazy" data-i="0" data-href="posts/privy-treasury-management-for-onchain-capital.html" data-av="https://images.ctfassets.net/6nllg31cugff/3WSRd4AhBug8WnXm9jKlvm/958db66732abe1ca115376e9e558c8e3/E0181S17H6Z-U09578L46LQ-6ec88bfcc19a-512.png?w=48&amp;q=75&amp;fm=webp" data-name="Sejal Jhawer" data-date="Sep 17, 2026"><img class="" src="assets/img/lJ5nbj4uhTvmtV4ItSkpPL0bPY.png" alt="" loading="lazy" data-i="1" data-href="posts/inside-the-stack-how-deel-is-turning-payroll-into-a-financial-account.html" data-av="https://images.ctfassets.net/6nllg31cugff/77kd3EZK7Jc9woDBWGYDVs/3cc0af5771770286098db7b3f6366265/headshotsquare-debbiesoon.jpg?w=48&amp;q=75&amp;fm=webp" data-name="Debbie Soon" data-date="Sep 15, 2026"><img class="" src="assets/img/qOQ7yR2rp7rMTteP0Ln85yoEu0.png" alt="" loading="lazy" data-i="2" data-href="posts/launch-a-global-stablecoin-card-program.html" data-av="https://images.ctfassets.net/6nllg31cugff/3NgmKmBvq4TzHadwOgjo7B/c21b8f824937ff621c6c6b9f53ffeea1/E0181S17H6Z-U09HEK31KFV-8f2ebe3b68d4-512.png?w=48&amp;q=75&amp;fm=webp" data-name="Meghna Mehta" data-date="Sep 9, 2026"><img class="" src="assets/img/aoQQJv9T1oK9j4e439d2H0bP8.png" alt="" loading="lazy" data-i="3" data-href="posts/introducing-organization-wallets.html" data-av="https://images.ctfassets.net/6nllg31cugff/5OliW4h4JXFFQ08gUWD4Tr/c037d248337547285381e58e2411a057/Henri.jpeg?w=48&amp;q=75&amp;fm=webp" data-name="Henri Stern" data-date="Aug 6, 2026"><img class="" src="assets/img/09WA5QS3rowFUEaQWvXtaoHIfQ.png" alt="" loading="lazy" data-i="4" data-href="posts/stablecoin-orchestration-guide.html" data-av="https://images.ctfassets.net/6nllg31cugff/2MHeoblnLY83eorwImAR81/1a0363b54a7145435b24cfbedaf17edc/vinny-mullin-headshot.jpg?w=48&amp;q=75&amp;fm=webp" data-name="Vinny Mullin" data-date="Aug 27, 2026"></a><div class="sx-foot"><div class="spby"><img id="sxAv" src="https://images.ctfassets.net/6nllg31cugff/3WSRd4AhBug8WnXm9jKlvm/958db66732abe1ca115376e9e558c8e3/E0181S17H6Z-U09578L46LQ-6ec88bfcc19a-512.png?w=48&amp;q=75&amp;fm=webp" alt="" loading="lazy"><div><b id="sxName">Sejal Jhawer</b><span id="sxDate">Sep 17, 2026</span></div></div><a class="btn dark" id="sxGo" href="posts/privy-treasury-management-for-onchain-capital.html">Read article <span class="arrow" aria-hidden="true">→</span></a></div></div></div></section>
 <div class="sec clog">
   <div class="head reveal"><h2>Changelog</h2></div>
   <div class="months" id="months" role="group" aria-label="Jump to month"><button class="chip" type="button" data-m="2026-10" aria-pressed="true">Oct 2026</button><button class="chip" type="button" data-m="2026-09" aria-pressed="false">Sep 2026</button><button class="chip" type="button" data-m="2026-08" aria-pressed="false">Aug 2026</button><button class="chip" type="button" data-m="2026-07" aria-pressed="false">Jul 2026</button><button class="chip" type="button" data-m="2026-06" aria-pressed="false">Jun 2026</button><button class="chip" type="button" data-m="2026-05" aria-pressed="false">May 2026</button><button class="chip" type="button" data-m="2026-04" aria-pressed="false">Apr 2026</button><button class="chip" type="button" data-m="2026-03" aria-pressed="false">Mar 2026</button><button class="chip" type="button" data-m="2026-02" aria-pressed="false">Feb 2026</button><button class="chip" type="button" data-m="2026-01" aria-pressed="false">Jan 2026</button></div>
@@ -721,34 +731,31 @@ $('#newsForm').addEventListener('submit',e=>{e.preventDefault();$('#newsOut').te
 })();
 
 
-/* ---------- spotlight carousel ---------- */
+/* ---------- spotlight: index + stage ---------- */
 (function(){
-  const sec=$('#spotlight'),track=$('#spTrack'),cards=[...track.children],bars=[...sec.querySelectorAll('.spbar')];
-  let i=0;const n=cards.length;
-  if(reduced)sec.classList.add('paused');
-  function show(k){
-    i=(k+n)%n;
-    const w=cards[0].offsetWidth+parseFloat(getComputedStyle(track).columnGap||24);
-    track.style.transform=`translateX(${-i*w}px)`;
-    cards.forEach((c,j)=>{const on=j===i;c.classList.toggle('on',on);c.setAttribute('aria-hidden',!on);c.tabIndex=on?0:-1;});
-    bars.forEach((b,j)=>{b.classList.remove('on');b.classList.toggle('done',j<i);b.setAttribute('aria-selected',j===i);});
-    void bars[i].offsetWidth;bars[i].classList.add('on');
+  const items=[...document.querySelectorAll('#sxIndex .sx-item')],imgs=[...document.querySelectorAll('#sxVis img')];
+  const vis=$('#sxVis'),go=$('#sxGo'),foot=document.querySelector('.sx-foot'),av=$('#sxAv'),nm=$('#sxName'),dt=$('#sxDate');
+  let cur=0,touch=false,ft;
+  function set(k){
+    if(k===cur)return;cur=k;
+    items.forEach((a,j)=>{const on=j===k;a.classList.toggle('on',on);on?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current');});
+    imgs.forEach((im,j)=>im.classList.toggle('on',j===k));
+    const d=imgs[k].dataset;vis.href=go.href=d.href;
+    // byline fades out, updates, fades back in with the crossfade
+    foot.classList.add('swap');clearTimeout(ft);
+    ft=setTimeout(()=>{av.src=d.av;nm.textContent=d.name;dt.textContent=d.date;foot.classList.remove('swap');},reduced?0:120);
   }
-  bars.forEach(b=>{b.onclick=()=>show(+b.dataset.i);b.querySelector('i').addEventListener('animationend',()=>{if(b.classList.contains('on'))show(i+1);});});
-  cards.forEach(c=>c.addEventListener('click',e=>{if(!c.classList.contains('on')){e.preventDefault();show(+c.dataset.i);}}));
-  sec.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){show(i+1);}if(e.key==='ArrowLeft'){show(i-1);}});
-  let sx=null;track.addEventListener('pointerdown',e=>{sx=e.clientX;});
-  addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>60)show(i+(dx<0?1:-1));});
-  let acc=0,lockUntil=0,quiet;
-  sec.addEventListener('wheel',e=>{
-    if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;
-    e.preventDefault();e.stopPropagation();
-    clearTimeout(quiet);quiet=setTimeout(()=>{acc=0;lockUntil=0;},180);
-    const now=performance.now();if(now<lockUntil)return;
-    acc+=e.deltaX;if(Math.abs(acc)>40){show(i+(acc>0?1:-1));acc=0;lockUntil=now+650;}
-  },{passive:false});
-  addEventListener('resize',()=>show(i));
-  show(0);
+  items.forEach((a,j)=>{
+    a.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')set(j);});
+    a.addEventListener('focus',()=>set(j));
+    a.addEventListener('pointerdown',e=>{touch=e.pointerType!=='mouse';});
+    // on touch there's no hover, so the first tap opens the story and the second follows the link
+    a.addEventListener('click',e=>{if(touch&&j!==cur){e.preventDefault();set(j);}});
+    a.addEventListener('keydown',e=>{
+      if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;e.preventDefault();
+      items[(j+(e.key==='ArrowDown'?1:-1)+items.length)%items.length].focus();
+    });
+  });
 })();
 
 /* ---------- changelog: month jump + live month ---------- */
