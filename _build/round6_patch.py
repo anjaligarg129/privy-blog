@@ -15,7 +15,19 @@ def band_svg(flip=False,cols=48,rows=7,pitch=10,sq=6):
             elif v>0:
                 o=(pitch-sq)/2; rects.append(f'<rect x="{c*pitch+o}" y="{rr*pitch+o}" width="{sq}" height="{sq}" rx=".6"/>')
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="{cols*pitch}" height="{rows*pitch}" fill="#fff">{"".join(rects)}</svg>'
+def vband_svg(cols=6,rows=48,pitch=6,sq=3.6,fill='#010110'):
+    rnd=random.Random(11);rects=[]
+    for c in range(cols):
+        dens=1-(c+.5)/cols
+        for r in range(rows):
+            t=(BAYER[r%4][c%4]+.5)/16*.8+rnd.random()*.2
+            v=dens-t
+            if v>.32: rects.append(f'<rect x="{c*pitch}" y="{r*pitch}" width="{pitch}" height="{pitch}"/>')
+            elif v>0:
+                o=(pitch-sq)/2; rects.append(f'<rect x="{c*pitch+o}" y="{r*pitch+o}" width="{sq}" height="{sq}" rx=".6"/>')
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{cols*pitch}" height="{rows*pitch}" fill="{fill}">{"".join(rects)}</svg>'
 def write_bands():
+    open(f'{ROOT}/assets/img/band-left-dark.svg','w').write(vband_svg())
     os.makedirs(f'{ROOT}/assets/img',exist_ok=True)
     open(f'{ROOT}/assets/img/band-down.svg','w').write(band_svg(False))
     open(f'{ROOT}/assets/img/band-up.svg','w').write(band_svg(True))
