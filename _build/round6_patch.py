@@ -23,11 +23,10 @@ CSS='''
 /* Privy-style section separation: tinted band with dithered grid edges */
 #field{display:none}
 #spot{padding-bottom:56px}
-#wall{position:relative;padding-top:calc(70px + clamp(28px,3.4vw,48px));padding-bottom:calc(70px + clamp(48px,6vw,80px));box-shadow:0 0 0 100vmax #f8f9fc;clip-path:inset(0 -100vmax);background:#f8f9fc}
+#wall{position:relative;padding-top:calc(70px + clamp(28px,3.4vw,48px));padding-bottom:calc(70px + clamp(48px,6vw,80px));border-image:conic-gradient(#f8f9fc 0 0) fill 0//0 100vmax}
 #wall::before,#wall::after{content:"";position:absolute;left:calc(50% - 50vw);width:100vw;height:70px;background-repeat:repeat-x;background-size:480px 70px;pointer-events:none}
 #wall::before{top:0;background-image:url("assets/img/band-down.svg")}
 #wall::after{bottom:0;background-image:url("assets/img/band-up.svg")}
-#wall>*{position:relative;z-index:1}
 /* taller chips; search bar matches */
 .chip{height:40px;padding:0 17px;font-size:14px}
 .crow .icon-btn{width:40px;height:40px}
