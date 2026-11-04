@@ -88,20 +88,16 @@ CSS='''
 .spimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 .spcard.on:hover .spimg img{transform:scale(1.03)}
 @media(max-width:820px){.spcard{grid-template-columns:1fr}.spimg{order:-1}.sptext{padding:20px 12px 16px}}
-.spfoot{width:var(--content);margin:24px auto 0;display:flex;align-items:center;gap:20px}
-.spcount{display:flex;align-items:center;gap:14px;font-family:var(--display);letter-spacing:-.03em;user-select:none}
-.spring{position:relative;width:64px;height:64px;display:grid;place-items:center;cursor:pointer}
-.spring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
-.spring circle{fill:none;stroke-width:1.5}
-.spring .trk{stroke:rgba(1,1,16,.12)}
-.spring .prg{stroke:var(--ink);stroke-linecap:round;stroke-dasharray:138.23;stroke-dashoffset:138.23}
-.spring.run .prg{animation:spring var(--spdur,7s) linear forwards}
-.spot:hover .spring.run .prg,.spot:focus-within .spring.run .prg,.spot.paused .spring.run .prg{animation-play-state:paused}
-@keyframes spring{to{stroke-dashoffset:0}}
-.spring b{font-weight:400;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
-.sptot{font-size:26px;line-height:1;color:var(--muted)}
-.spcap{font-size:14px;color:var(--muted);margin-left:8px;max-width:40ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:820px){.spcap{display:none}}
+.spfoot{width:var(--content);margin:22px auto 0;display:flex;align-items:center;gap:24px}
+.spbars{flex:1;display:flex;gap:16px}
+.spbar{flex:1;height:22px;display:flex;align-items:center;cursor:pointer}
+.spbar i{position:relative;display:block;width:100%;height:2px;background:rgba(1,1,16,.12);overflow:hidden;border-radius:2px}
+.spbar i::after{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left}
+.spbar.done i::after{transform:none}
+.spbar.on i::after{animation:spfill var(--spdur,7s) linear forwards}
+.spot:hover .spbar.on i::after,.spot:focus-within .spbar.on i::after,.spot.paused .spbar.on i::after{animation-play-state:paused}
+@keyframes spfill{to{transform:none}}
+@media(max-width:820px){.spbars{gap:8px}}
 
 /* changelog: full timeline, scrolls sideways, jump by month */
 .clog .head{margin-bottom:20px}
@@ -128,12 +124,11 @@ def spotlight_html(rows,posts):
         cards.append(f'<a class="spcard{" on" if n==0 else ""}" href="posts/{s}.html" role="group" aria-roledescription="slide" aria-label="{n+1} of {len(SPOT_SLUGS)}" data-i="{n}" data-title="{H.escape(r[0])}"'+('' if n==0 else ' tabindex="-1" aria-hidden="true"')+'>'
           f'<div class="spimg"><img src="{img}" alt="" loading="lazy"></div><div class="sptext"><div class="eyebrow">{H.escape(CAT[r[3]])} · {rt.group(1) if rt else 3} min read</div><h3>{H.escape(r[0])}</h3>'
           f'<div class="spby">'+(f'<img src="{av.group(1)}" alt="" loading="lazy">' if av else '')+f'<div><b>{H.escape(au.group(1) if au else "Privy")}</b><span>{r[4]}</span></div></div></div></a>')
+    bars=''.join(f'<button class="spbar{" on" if n==0 else ""}" type="button" role="tab" aria-label="Go to slide {n+1}" aria-selected="{"true" if n==0 else "false"}" data-i="{n}"><i></i></button>' for n in range(len(SPOT_SLUGS)))
     return ('<section class="spot" id="spotlight" aria-roledescription="carousel" aria-label="Spotlight">'
       '<div class="head reveal"><h2><em>In the</em> spotlight</h2></div>'
       f'<div class="sptrack" id="spTrack">{"".join(cards)}</div>'
-      '<div class="spfoot"><div class="spcount"><button class="spring run" id="spRing" type="button" aria-label="Next slide">'
-      '<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="22"/><circle class="prg" cx="24" cy="24" r="22"/></svg>'
-      f'<b id="spNum">01</b></button><span class="sptot">/ {len(SPOT_SLUGS):02d}</span></div><span class="spcap" id="spCap" aria-live="polite"></span></div></section>\n')
+      f'<div class="spfoot"><div class="spbars" role="tablist" aria-label="Spotlight slides">{bars}</div></div></section>\n')
 
 def changelog_html():
     clog=json.load(open(f'{ROOT}/privy-bundle-2.json'))['clog']
@@ -157,7 +152,7 @@ def changelog_html():
 JS=r'''
 /* ---------- spotlight carousel ---------- */
 (function(){
-  const sec=$('#spotlight'),track=$('#spTrack'),cards=[...track.children],ring=$('#spRing'),num=$('#spNum'),cap=$('#spCap');
+  const sec=$('#spotlight'),track=$('#spTrack'),cards=[...track.children],bars=[...sec.querySelectorAll('.spbar')];
   let i=0;const n=cards.length;
   if(reduced)sec.classList.add('paused');
   function show(k){
@@ -165,11 +160,10 @@ JS=r'''
     const w=cards[0].offsetWidth+parseFloat(getComputedStyle(track).columnGap||24);
     track.style.transform=`translateX(${-i*w}px)`;
     cards.forEach((c,j)=>{const on=j===i;c.classList.toggle('on',on);c.setAttribute('aria-hidden',!on);c.tabIndex=on?0:-1;});
-    num.textContent=String(i+1).padStart(2,'0');cap.textContent='Next: '+cards[(i+1)%n].dataset.title;
-    ring.classList.remove('run');void ring.offsetWidth;ring.classList.add('run');
+    bars.forEach((b,j)=>{b.classList.remove('on');b.classList.toggle('done',j<i);b.setAttribute('aria-selected',j===i);});
+    void bars[i].offsetWidth;bars[i].classList.add('on');
   }
-  ring.querySelector('.prg').addEventListener('animationend',()=>show(i+1));
-  ring.onclick=()=>show(i+1);
+  bars.forEach(b=>{b.onclick=()=>show(+b.dataset.i);b.querySelector('i').addEventListener('animationend',()=>{if(b.classList.contains('on'))show(i+1);});});
   cards.forEach(c=>c.addEventListener('click',e=>{if(!c.classList.contains('on')){e.preventDefault();show(+c.dataset.i);}}));
   sec.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){show(i+1);}if(e.key==='ArrowLeft'){show(i-1);}});
   let sx=null;track.addEventListener('pointerdown',e=>{sx=e.clientX;});
