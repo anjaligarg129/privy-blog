@@ -335,10 +335,12 @@ a.log:hover h3{color:var(--deep)}
 .crow .icon-btn{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s}
 .crow .icon-btn:hover{color:var(--ink);border-color:rgba(1,1,16,.26)}
 .crow .icon-btn svg{width:15px;height:15px}
-.crow .overlay{top:-11px;border-radius:18px;border-color:rgba(1,1,16,.1);box-shadow:0 10px 30px rgba(1,1,16,.08),0 1px 3px rgba(1,1,16,.04)}
-.crow .o-row{height:56px;padding:0 24px;gap:14px}
-.crow .o-row svg{width:20px;height:20px}
-.crow .o-row input{font-size:16px}
+.crow .overlay{top:calc(50% - 17px);border-radius:17px;border-color:rgba(1,1,16,.1);box-shadow:0 10px 30px rgba(1,1,16,.08),0 1px 3px rgba(1,1,16,.04)}
+.crow .o-row{height:32px;padding:0 14px;gap:10px}
+.crow .o-row svg{width:15px;height:15px;color:var(--muted)}
+.crow .o-row input{font-size:13px}
+.crow .overlay.has-q{border-radius:17px}
+@media(max-width:760px){.crow .o-row{height:32px;padding:0 14px}.crow .o-row input{font-size:16px}}
 .crow .o-body{border-top-color:rgba(1,1,16,.06);padding:6px 10px 10px}
 .crow .result{border-radius:12px;padding:12px 14px}
 .crow .result:hover,.crow .result.sel{background:rgba(117,109,255,.05);box-shadow:none}
