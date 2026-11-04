@@ -72,3 +72,6 @@
 
 /* the old "Related posts" band is replaced by Keep reading */
 .ax-ready [class*="__relatedBand"]{display:none}
+
+/* TL;DR sits in the lead-note frame but reads at the same size, face, leading and colour as the body text */
+[aria-label="TL;DR"] .leadNote-module__z5aniq__text{font-family:var(--font-body);font-size:18px;line-height:1.65;color:var(--ink)}
