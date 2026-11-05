@@ -89,3 +89,9 @@
 
 /* no dotted edge on Keep reading cards (only the home hero keeps it) */
 .ax-art::before{display:none}
+
+/* body copy is Inter, like the landing page; titles keep the Acid display face */
+:root:root{--font-body:var(--font-inter),Inter,system-ui,sans-serif}
+/* Inter is loaded at 400/500/600: bold runs use 600 instead of a faux 700, and Geist's negative tracking is dropped */
+[data-prose] strong,[data-prose] b{font-weight:600}
+[class*="__articleHead"] [class*="__articleDek"],[class*="__articleHead"] [class*="__articleMeta"],[class*="__articleHead"] [class*="__articleAuthor"]{letter-spacing:normal}
